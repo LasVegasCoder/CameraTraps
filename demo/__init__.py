@@ -18,8 +18,8 @@ dropzone = Dropzone(app)
 app.config['SECRET_KEY'] = 'supersecretkeygoeshere'
 
 #api url
-app.config['API_URL'] = 'http://23.101.140.63:8081/v1/camera_trap_api/detect'
-app.config['API_RESULTS_URL'] = 'http://23.101.140.63:8081/static/results/'
+app.config['API_URL'] = '<add API URL here>'
+app.config['API_RESULTS_URL'] = '<add API image results URL here>'
 
 
 # Dropzone settings
