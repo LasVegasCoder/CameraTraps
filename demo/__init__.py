@@ -8,18 +8,21 @@ from . import aadConfig as aad
 
 import os
 
+#app = Flask(__name__, static_url_path='')
 app = Flask(__name__)
+
 app.debug = True
 api = Api(app)
 
 webassets = Environment(app)
 dropzone = Dropzone(app)
 
+
 app.config['SECRET_KEY'] = 'supersecretkeygoeshere'
 
 #api url
-app.config['API_URL'] = '<add API URL here>'
-app.config['API_RESULTS_URL'] = '<add API image results URL here>'
+app.config['API_URL'] = 'http://23.101.140.63:8081/v1/camera_trap_api/detect'
+app.config['API_RESULTS_URL'] = 'http://23.101.140.63:8081/static/results/'
 
 
 # Dropzone settings
@@ -59,7 +62,7 @@ patch_request_class(app)  # set maximum file size, default is 16MB
 
 #model configuration
 app.config['MODEL_FILE'] = 'checkpoint/frozen_inference_graph.pb'
-app.config['OUTPUT_FOLDER'] = 'static/results/'
+app.config['OUTPUT_FOLDER'] = 'CameraTrapAssets/results/'
 
 
 from . import assets

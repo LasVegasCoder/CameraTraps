@@ -20,18 +20,18 @@
             <nav class="navbar navbar-expand-lg bg-transparent pl-4 z-index-999">
                <div class="d-flex align-items-center">
 
-		 <a class="navbar-brand d-flex" href="{{ url_for('index') }}">
+		 <a class="navbar-brand d-flex mr-2" href="{{ url_for('index') }}">
                   {% block microsoft_logo %}{% endblock %}
 
                   <span class="{% block font_Color_1 %}{% endblock %} logo-divider"> | </span>
                 </a>
                 <a class="{% block font_Color_2%}{% endblock %}  aie-link letter-spacing-1" href="https://www.microsoft.com/en-us/aiforearth"> AI for Earth</a>
       		</div>
-		<button class="navbar-toggler bg-light border" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+		<button class="navbar-toggler bg-white border" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
    			 <span class="navbar-toggler-icon"></span>
  		 </button>
                <div class="navbar-collapse justify-content-between collapse navbar-collapse mb-view" id="navbarSupportedContent">
-                  <ul class="navbar-nav mr-auto h4 ml-5 navitems-mob">
+                  <ul class="navbar-nav mr-auto h4 ml-5 navitems-mob d-flex justify-content-center">
                     <li class="nav-item font-biryani mr-5">
                       <a class="nav-link letter-spacing-1 font-size12 {% block active_1 %}{% endblock %} {% block font_Class_1 %}{% endblock %}" 
                       href="{{ url_for('upload') }}">UPLOAD <span class="sr-only">(current)</span></a>

@@ -4,6 +4,8 @@ from flask_assets import Environment, Bundle
 from flask_restful import Resource, Api
 from urllib.parse import unquote
 from werkzeug.utils import secure_filename
+from flask import send_from_directory
+
 
 from . import app, photos, api
 import os
@@ -21,7 +23,20 @@ from PIL import Image
 from . import aadConfig as aad
 from . import login_helper 
 import time
+import mimetypes
 
+
+@app.route('/CameraTrapAssets/img/<path:path>')
+def site_images(path):
+    return send_from_directory('CameraTrapAssets/img/', path)
+
+@app.route('/CameraTrapAssets/gallery/<path:path>')
+def gallery_images(path):
+    return send_from_directory('CameraTrapAssets/gallery/', path)
+
+@app.route('/CameraTrapAssets/gallery_results/<path:path>')
+def gallery_resut_images(path):
+    return send_from_directory('CameraTrapAssets/gallery_results/', path)
 
 @app.route('/sessionclear')
 def ClearLoginSession():
@@ -111,7 +126,7 @@ def processurlimage():
     
     detection_key = name + '.jpg'
     img_file = detection_output[detection_key].get('img_file')
-    #outputFileName = "{}{}".format('static/results/' + name, '.png')
+    #outputFileName = "{}{}".format('CameraTrapAssets/results/' + name, '.png')
     outputfile = detection_output[detection_key].get('img_file')
     image_output.append({
         "path": outputfile,
@@ -133,22 +148,21 @@ def processurlimage():
 
 @app.route('/processimages', methods=['POST'])
 def processimages():
-    
     image_output = []
     download_json = {}
-    
     if request.method == 'POST':
         file_obj = request.files
-        
         for f in file_obj:
-           
             file = request.files.get(f)
             img_name = secure_filename(file.filename)
+            print(img_name)
+
             
-            #replace_characters = [' ', '_', ',', '-']
-            #for rc in replace_characters:
-            #    img_name = img_name.replace(rc, '')
-                                    
+            replace_characters = [' ', '_', ',', '-']
+            for rc in replace_characters:
+                img_name = img_name.replace(rc, '')
+                  
+                      
             if os.path.exists(os.path.join(os.getcwd(), 'static/uploads/', img_name)):
                 os.remove(os.path.join(os.getcwd(), 'static/uploads/', img_name))
 
@@ -163,22 +177,23 @@ def processimages():
             base_url = request.base_url.replace('processimages', 'static/uploads/')
             img_url = base_url  + filename
 
+            print(img_url)
+
             start = time.time()
             img = Image.open(BytesIO(urlopen.urlopen(img_file).read()))
             img.thumbnail((img.size[0] / 2, img.size[1] / 2), Image.ANTIALIAS)
             os.remove(os.path.join(os.getcwd(), 'static/uploads/', img_name))
             img.save(os.path.join(os.getcwd(), 'static/uploads/', img_name))
-
             end = time.time()
             print('Time taken', end - start)
-
             files = {img_file.split('/')[-1]: BytesIO(urlopen.urlopen(img_url).read())}
             form = {'image_name': img_file.split('/')[-1]}
-            detection_output = requests.post(app.config['API_URL'], files=files).json()
-            name, ext = os.path.splitext(img_file.split('/')[-1])
-           
+            detection_output = requests.post('http://23.101.140.63:8081/v1/camera_trap_api/detect', files=files).json()
+            print(detection_output)
+            name, ext = os.path.splitext(img_file.split('/')[-1])           
+
             detection_key = name + '.jpg'
-            
+                        
             outputfile = detection_output[detection_key].get('img_file')
 
             image_output.append({
@@ -220,8 +235,8 @@ def results():
 def gallery():
     #if not login_helper.is_logged_in():
     #    return login_helper.redirect_to_login()
-    gallery_images = os.listdir('static/gallery/')
-    gallery_images = ['static/gallery/' + img for img in gallery_images]
+    gallery_images = os.listdir('CameraTrapAssets/gallery/')
+    gallery_images = ['CameraTrapAssets/gallery/' + img for img in gallery_images]
     #gallery_images = random.sample(gallery_images, 12)
     return render_template('gallery.html', gallery_images=gallery_images)
 
@@ -231,15 +246,15 @@ def gallery():
 def gallery_results(img_index):
     #if not login_helper.is_logged_in():
     #    return login_helper.redirect_to_login()
-    gallery_images = os.listdir('static/gallery/')
+    gallery_images = os.listdir('CameraTrapAssets/gallery/')
     gallery_images.remove(img_index)
     gallery_images.insert(0, img_index)
-    gallery_images = ["/static/gallery/" + img for img in gallery_images]
+    gallery_images = ["/CameraTrapAssets/gallery/" + img for img in gallery_images]
     output_img = []
     output_json = {}
     for index, img_file in enumerate(gallery_images):
         print('Processing image {} of {}'.format(index,len(gallery_images)))
-        with open('static/gallery_results/results.json', 'r') as res:
+        with open('CameraTrapAssets/gallery_results/results.json', 'r') as res:
             res_data = json.load(res)
             num_objects = res_data[img_file.split('/')[-1]]['num_objects']
             output_img.append({

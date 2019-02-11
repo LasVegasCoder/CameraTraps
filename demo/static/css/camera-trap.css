@@ -18,7 +18,7 @@ li.nav-item.active{
     border-bottom:3px solid #6889EC;
 }
 .bg-img{
-    background-image:url('/static/img/landing-img.png');
+    background-image:url('/cameratrapassets/img/landing-img.png');
     background-repeat:no-repeat;
     background-size: cover;
     margin-top:-4%;
@@ -638,14 +638,12 @@ div ::-webkit-scrollbar-thumb {
     display: none;
 }
 .aie-link {
-    font-weight: 400;
     font-size: 12pt;
     font-weight: 500;
-    margin-top: 4px !important;
 }
 .logo-divider
 {
-    margin-left: 5px;
+    margin-left: 8px;
 }
 .w-65
 {
@@ -668,6 +666,17 @@ div ::-webkit-scrollbar-thumb {
 }
 .hm-logo-grey{
 	display:none;
+}
+.text-width{
+	width: 100px;
+    	overflow: hidden;
+    	text-overflow: ellipsis;
+    	white-space: nowrap;
+    	max-width: 150px;
+}
+.td-align td{
+	max-width: 126px;
+	min-width: 100px;
 }
 @media (min-width:1024px){
 	.navbar{
@@ -694,7 +703,7 @@ margin-top:-10%;
 }
 @media (max-width:1024px){
 	.bg-img{
-		background-image:url('/static/img/mobile_cheetah.png');
+		background-image:url('/cameratrapassets/img/mobile_cheetah.png');
 		background-repeat:no-repeat;
 		background-size: contain;
 		margin-top:-12%;
@@ -716,7 +725,7 @@ margin-top:-10%;
 		max-height:900px;
 	}
 	.navbar-toggler-icon {
-  	  	background-image: url(/static/img/horiz-menu.png);
+  	  	background-image: url(/cameratrapassets/img/horiz-menu.png);
 	}
 	.logo-divider{
 		color:#9b9b9b !important;
@@ -824,7 +833,7 @@ margin-top:-10%;
 	}
 	.mb-view{
 	border-top:1px solid #ccc;
-	margin-bottom:15px;
+	margin-top:10px;
 }
 	.navbar{
 	margin-bottom:15px;
@@ -837,7 +846,7 @@ margin-top:-10%;
 	padding:0px !important;
 	}
 	.bg-img{
-		background-image:url('/static/img/mobile_cheetah.png');
+		background-image:url('/cameratrapassets/img/mobile_cheetah.png');
 		background-repeat:no-repeat;
 		background-size: contain;
 		margin-top:-12%;
