@@ -5,8 +5,6 @@ from flask_restful import Resource, Api
 from urllib.parse import unquote
 from werkzeug.utils import secure_filename
 from flask import send_from_directory
-
-
 from . import app, photos, api
 import os
 # from . import model 
@@ -23,9 +21,10 @@ from PIL import Image
 from . import aadConfig as aad
 from . import login_helper 
 import time
-import mimetypes
 
 
+# routes for cameratrapassets as these are being loaded
+# from the cameratrapassets directory instead of the static directory
 @app.route('/CameraTrapAssets/img/<path:path>')
 def site_images(path):
     return send_from_directory('CameraTrapAssets/img/', path)
@@ -37,6 +36,7 @@ def gallery_images(path):
 @app.route('/CameraTrapAssets/gallery_results/<path:path>')
 def gallery_resut_images(path):
     return send_from_directory('CameraTrapAssets/gallery_results/', path)
+
 
 @app.route('/sessionclear')
 def ClearLoginSession():
@@ -126,7 +126,7 @@ def processurlimage():
     
     detection_key = name + '.jpg'
     img_file = detection_output[detection_key].get('img_file')
-    #outputFileName = "{}{}".format('CameraTrapAssets/results/' + name, '.png')
+    #outputFileName = "{}{}".format('static/results/' + name, '.png')
     outputfile = detection_output[detection_key].get('img_file')
     image_output.append({
         "path": outputfile,
@@ -155,14 +155,9 @@ def processimages():
         for f in file_obj:
             file = request.files.get(f)
             img_name = secure_filename(file.filename)
-            print(img_name)
+            #print(img_name)
 
-            
-            replace_characters = [' ', '_', ',', '-']
-            for rc in replace_characters:
-                img_name = img_name.replace(rc, '')
-                  
-                      
+              
             if os.path.exists(os.path.join(os.getcwd(), 'static/uploads/', img_name)):
                 os.remove(os.path.join(os.getcwd(), 'static/uploads/', img_name))
 
@@ -173,11 +168,14 @@ def processimages():
             img_file = photos.url(filename)
             filename = img_file.split('/')[-1]
             
+            print("-----")
+            print("url:" + filename)
+            print("-----")
+
             org_path = img_file
             base_url = request.base_url.replace('processimages', 'static/uploads/')
             img_url = base_url  + filename
 
-            print(img_url)
 
             start = time.time()
             img = Image.open(BytesIO(urlopen.urlopen(img_file).read()))
@@ -188,13 +186,22 @@ def processimages():
             print('Time taken', end - start)
             files = {img_file.split('/')[-1]: BytesIO(urlopen.urlopen(img_url).read())}
             form = {'image_name': img_file.split('/')[-1]}
-            detection_output = requests.post('http://23.101.140.63:8081/v1/camera_trap_api/detect', files=files).json()
+            detection_output = requests.post(app.config["API_URL"], files=files).json()
             print(detection_output)
-            name, ext = os.path.splitext(img_file.split('/')[-1])           
+            name, ext = os.path.splitext(img_file.split('/')[-1])
 
+            #remove this when api is fixed to not remove spaces and other characters
+            replace_characters = [' ', '_', ',', '-']
+            for rc in replace_characters:
+                name = name.replace(rc, '')
+           
             detection_key = name + '.jpg'
-                        
+            
+            print(detection_key)
+            
             outputfile = detection_output[detection_key].get('img_file')
+
+            print(outputfile)
 
             image_output.append({
                 "path": outputfile,

@@ -8,15 +8,12 @@ from . import aadConfig as aad
 
 import os
 
-#app = Flask(__name__, static_url_path='')
 app = Flask(__name__)
-
 app.debug = True
 api = Api(app)
 
 webassets = Environment(app)
 dropzone = Dropzone(app)
-
 
 app.config['SECRET_KEY'] = 'supersecretkeygoeshere'
 
@@ -62,7 +59,7 @@ patch_request_class(app)  # set maximum file size, default is 16MB
 
 #model configuration
 app.config['MODEL_FILE'] = 'checkpoint/frozen_inference_graph.pb'
-app.config['OUTPUT_FOLDER'] = 'CameraTrapAssets/results/'
+app.config['OUTPUT_FOLDER'] = 'static/results/'
 
 
 from . import assets
