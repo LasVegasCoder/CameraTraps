@@ -21,4 +21,5 @@ __pycache__/
 
 .spyproject/workspace.ini
 
-.demo/static/results/*
+.demo/static/results*
+.demo/static/.webassets-cache*
